@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Candle Record
+GenericName=Screen Recorder
+Comment=Simple modern screen recorder
+Exec=candle-record
+Icon=io.github.alikontas.CandleRecord
+Terminal=false
+Categories=AudioVideo;Recorder;Utility;
+StartupNotify=false

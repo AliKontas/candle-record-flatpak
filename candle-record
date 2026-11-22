@@ -1,0 +1,4 @@
+#!/bin/sh
+export GTK_USE_PORTAL=0
+export NO_AT_BRIDGE=1
+exec python3 /app/ekran_kayit.py "$@"

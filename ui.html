@@ -189,12 +189,12 @@
   .stat .k{font-size:.74rem;color:#bcd3ea;margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
   .stat .v{font-size:.96rem;font-weight:650;color:#f4faff;word-break:break-word}
   .stat .v.good{color:var(--ok)}
-  .opt-group{display:flex;gap:8px;margin-top:2px;}
+  .opt-group{display:flex;gap:8px;margin-top:2px;flex-wrap:wrap;}
   .opt{
     flex:1; appearance:none; border:1px solid rgba(170,210,255,.14);
     background:rgba(8,16,30,.45); color:#dcecff; border-radius:10px;
     padding:10px 8px; font:inherit; font-size:.82rem; font-weight:700;
-    cursor:pointer; transition:.18s; min-height:40px;
+    cursor:pointer; transition:.18s; min-height:40px; min-width:64px;
   }
   .opt:hover:not(:disabled){border-color:rgba(170,210,255,.32); background:rgba(255,255,255,.06); color:#fff;}
   .opt.active{
@@ -281,6 +281,7 @@
           <div class="k">Resolution</div>
           <div class="opt-group" id="resolutionSelect">
             <button class="opt active" data-value="native">Native</button>
+            <button class="opt" data-value="2560x1440">1440p↑</button>
             <button class="opt" data-value="1920x1080">1080p</button>
             <button class="opt" data-value="1280x720">720p</button>
           </div>
@@ -291,6 +292,14 @@
             <button class="opt" data-value="standard">Standard</button>
             <button class="opt active" data-value="high">High</button>
             <button class="opt" data-value="ultra">Ultra</button>
+            <button class="opt" data-value="maximum">Max</button>
+          </div>
+        </div>
+        <div class="stat">
+          <div class="k">Frame rate</div>
+          <div class="opt-group" id="fpsSelect">
+            <button class="opt" data-value="30">30 FPS</button>
+            <button class="opt active" data-value="60">60 FPS</button>
           </div>
         </div>
         <div class="stat audio-row">
@@ -354,6 +363,7 @@ function setRecording(on) {
   $('audioToggle').disabled = on;
   setOptsDisabled('resolutionSelect', on);
   setOptsDisabled('qualitySelect', on);
+  setOptsDisabled('fpsSelect', on);
   $('timerSub').textContent = on ? 'Recording' : 'Ready';
   $('sideStatus').textContent = on ? 'Recording' : 'Idle';
   $('sideStatus').className = 'v' + (on ? '' : '');
@@ -379,7 +389,8 @@ async function startRec() {
   try {
     const q = optValue('qualitySelect');
     const r = optValue('resolutionSelect');
-    const d = await api('/start?audio=' + (audioEnabled() ? '1' : '0') + '&quality=' + encodeURIComponent(q) + '&resolution=' + encodeURIComponent(r));
+    const f = optValue('fpsSelect');
+    const d = await api('/start?audio=' + (audioEnabled() ? '1' : '0') + '&quality=' + encodeURIComponent(q) + '&resolution=' + encodeURIComponent(r) + '&fps=' + encodeURIComponent(f));
     if (d.ok) {
       setRecording(true);
       setStatus(audioEnabled() ? 'Recording your screen with audio.' : 'Recording your screen.');

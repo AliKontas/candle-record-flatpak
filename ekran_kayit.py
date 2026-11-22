@@ -57,7 +57,7 @@ class State:
             pass
         return "default"
 
-    def start(self, audio=False, resolution="native", quality="high"):
+    def start(self, audio=False, resolution="native", quality="high", fps=30):
         with self.lock:
             if self.proc and self.proc.poll() is None:
                 return {"ok": False, "error": "Already recording."}
@@ -71,18 +71,25 @@ class State:
                 "standard": ("veryfast", "23"),
                 "high": ("medium", "18"),
                 "ultra": ("slow", "16"),
+                "maximum": ("slower", "14"),
             }
             preset, crf = quality_presets.get(quality, ("medium", "18"))
+            try:
+                fps = int(fps)
+            except Exception:
+                fps = 30
+            if fps not in (30, 60):
+                fps = 30
 
             cmd = [
                 "ffmpeg", "-y",
                 "-f", "x11grab",
                 "-video_size", self.size,
-                "-framerate", "30",
+                "-framerate", str(fps),
                 "-i", os.environ.get("DISPLAY", ":0.0"),
             ]
             vf = []
-            if resolution in ("1920x1080", "1280x720"):
+            if resolution in ("2560x1440", "1920x1080", "1280x720"):
                 vf = ["-vf", f"scale={resolution}:flags=lanczos"]
 
             if audio:
@@ -90,12 +97,12 @@ class State:
                 cmd += ["-f", "pulse", "-i", monitor]
                 cmd += ["-c:v", "libx264", "-preset", preset, "-crf", crf, "-pix_fmt", "yuv420p"]
                 cmd += vf
-                cmd += ["-c:a", "aac", "-b:a", "192k"]
+                cmd += ["-c:a", "aac", "-b:a", "256k"]
             else:
                 cmd += ["-c:v", "libx264", "-preset", preset, "-crf", crf, "-pix_fmt", "yuv420p"]
                 cmd += vf
                 cmd += ["-an"]
-            cmd += [self.out_path]
+            cmd += ["-movflags", "+faststart", self.out_path]
             try:
                 self.proc = subprocess.Popen(
                     cmd, stdin=subprocess.PIPE,
@@ -242,7 +249,8 @@ class Handler(BaseHTTPRequestHandler):
             audio = params.get("audio", "0") in ("1", "true")
             resolution = params.get("resolution", "native")
             quality = params.get("quality", "high")
-            return self._send(200, json.dumps(STATE.start(audio=audio, resolution=resolution, quality=quality)))
+            fps = params.get("fps", "30")
+            return self._send(200, json.dumps(STATE.start(audio=audio, resolution=resolution, quality=quality, fps=fps)))
         if p == "/stop":
             return self._send(200, json.dumps(STATE.stop()))
         if p == "/open-downloads":

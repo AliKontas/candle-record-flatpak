@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.alikontas.CandleRecord</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <name>Candle Record</name>
+  <summary>Simple modern screen recorder</summary>
+  <description>
+    <p>Candle Record is a clean, modern screen recorder for Linux.</p>
+    <p>Features: screen recording with optional system audio, resolution and quality presets, and a modern rounded interface. Recordings are saved to ~/Downloads/Candle Record.</p>
+  </description>
+  <launchable type="desktop-id">io.github.alikontas.CandleRecord.desktop</launchable>
+  <url type="homepage">https://github.com/AliKontas/candle-record-flatpak</url>
+  <developer_name>Ali Kontas</developer_name>
+  <releases>
+    <release version="1.0.20" date="2026-11-22"/>
+  </releases>
+  <content_rating type="oars-1.1"/>
+</component>

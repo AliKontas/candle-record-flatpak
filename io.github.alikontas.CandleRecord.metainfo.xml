@@ -13,7 +13,7 @@
   <url type="homepage">https://github.com/AliKontas/candle-record-flatpak</url>
   <developer_name>Ali Kontas</developer_name>
   <releases>
-    <release version="1.0.20" date="2026-11-22"/>
+    <release version="1.0.21" date="2026-11-22"/>
   </releases>
   <content_rating type="oars-1.1"/>
 </component>
